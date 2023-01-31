@@ -23,6 +23,7 @@ body{
     padding: 2rem 1rem;
     font-size: 16px;
     font-family: 'Rubik', sans-serif;
+    position: relative;
 }
 
 button{
@@ -55,6 +56,14 @@ main{
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+/*only for testing purposes!!*/
+.test-section{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 .comment-wrapper{
@@ -183,6 +192,18 @@ main{
     color: var(--moderate-blue);
     font-size: .9rem;
     font-weight: 700;
+}
+
+footer{
+    /*position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;*/
+    padding: 1.5rem 1rem;
+}
+
+.attribution{
+    text-align: center;
 }
 
 
@@ -327,6 +348,13 @@ main{
     main{
         /*max-width: 800px;
         padding: 2rem;*/
+        max-width: 730px;
+        margin-inline: auto;
+        gap: 1.5rem;
+    }
+
+    /*only for testing purposes*/
+    .test-section{
         max-width: 730px;
         margin-inline: auto;
         gap: 1.5rem;
