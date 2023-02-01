@@ -48,7 +48,8 @@ function displayComments(){
     formAddComment.classList.add('form-add-comment')
     //Create User image and add to the Form
     const formUserImage = document.createElement('img')
-    formUserImage.src = "../styles/"+currentUser.image.png
+    //formUserImage.src = "../styles/"+currentUser.image.png
+    formUserImage.src = currentUser.image.png
     formUserImage.classList.add('user-image')
     formAddComment.appendChild(formUserImage)
     //Create Text area and add to form
@@ -154,7 +155,8 @@ function createComment(comment){
     commentContainer.classList.add('comment-container')
     //Create User image and append to Commentcontainer
     const userImage = document.createElement('img')
-    userImage.src = "../styles/"+comment.user.image.png
+    //userImage.src = "../styles/"+comment.user.image.png
+    userImage.src = comment.user.image.png
     userImage.classList.add('user-image')
     commentContainer.appendChild(userImage)
     //Create Username and append to Commentcontainer
