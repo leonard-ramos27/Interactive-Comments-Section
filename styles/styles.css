@@ -30,6 +30,16 @@ button{
     background-color: transparent;
     border: none;
     font-family: inherit;
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+
+button:hover{
+    opacity: .8;
+}
+
+button:active{
+    opacity: .5;
 }
 
 textarea{
@@ -63,7 +73,7 @@ main{
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 5rem;
 }
 
 .comment-wrapper{
@@ -282,15 +292,25 @@ footer{
 }
 
 .add-reply-container{
-    display: none;
+    /*display: none;*/
 }
 
-.form-add-comment, .form-add-reply{
+.form-add-comment /*.form-add-reply*/{
     display: grid;
     grid-template-columns: 30px 1fr;
     grid-template-areas: 
     "txt-comment txt-comment"
     "user-image button";
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-add-reply{
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    grid-template-areas: 
+    "txt-comment txt-comment txt-comment"
+    "user-image btnReply btnCancel";
     align-items: center;
     gap: 1rem;
 }
@@ -303,13 +323,24 @@ footer{
 
 
 
-.btn-send, .btn-add-reply{
+.btn-send /*.btn-add-reply*/{
     grid-area: button;
     justify-self: end;
 }
 
+.btn-add-reply{
+    grid-area: btnReply;
+    justify-self: end;
+}
+
+.btn-cancel-reply{
+    grid-area: btnCancel;
+    justify-self: end;
+}
+
 .blue-button{
-    padding: .8rem 1.7rem;
+    /*padding: .8rem 1.7rem;*/
+    padding: .8rem 1rem;
     background-color: var(--moderate-blue);
     border-radius: 10px;
     color: white;
@@ -394,11 +425,29 @@ footer{
         "score content content content content";
     }
 
-    .form-add-comment, .form-add-reply{
+    .form-add-comment /*.form-add-reply*/{
         grid-template-columns: 30px 1fr auto;
         grid-template-areas: 
         "user-image txt-comment button";
         align-items: start;
+    }
+
+    .form-add-reply{
+        grid-template-columns: 30px 1fr auto;
+        grid-template-rows: auto 1fr;
+        grid-template-areas: 
+        "user-image txt-comment btnReply"
+        "user-image txt-comment btnCancel";
+        align-items: start;
+        row-gap: .5rem;
+    }
+
+    .blue-button{
+        padding: .8rem 1.5rem;
+    }
+
+    .btn-add-reply{
+        justify-self: unset;
     }
 
     .form-update-comment{
