@@ -20,10 +20,13 @@ body{
     min-width: 350px;
     min-height: 100vh;
     background-color: var(--very-light-gray);
-    padding: 2rem 1rem;
+    padding: 2rem 1rem .5rem;
     font-size: 16px;
     font-family: 'Rubik', sans-serif;
     position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 2rem;
 }
 
 button{
@@ -204,19 +207,6 @@ main{
     font-weight: 700;
 }
 
-footer{
-    /*position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;*/
-    padding: 1.5rem 1rem;
-}
-
-.attribution{
-    text-align: center;
-}
-
-
 
 .from-current-user{
     /*grid-template-columns: 30px auto 40px 1fr auto;
@@ -369,11 +359,86 @@ footer{
     justify-self: end;
 }
 
+footer{
+    padding: 1rem 1rem 0;
+}
+
+.attribution{
+    text-align: center;
+    font-size: .8rem;
+    font-weight: 400;
+    color: var(--dark-blue);
+}
+
+.attribution a{
+    text-decoration: none;
+    color: var(--moderate-blue);
+    cursor: pointer;
+}
+
+.modal-background{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: hsla(212, 13%, 46%, 0.356);
+    padding: 30vh 1rem;
+}
+
+.modal-delete-comment{
+    margin-inline: auto;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    display: grid;
+    grid-template-areas: 
+    "h1 h1"
+    "p p"
+    "btn-cancel btn-delete";
+    gap: 1.3rem 1rem;
+}
+
+.modal-delete-comment h1{
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--dark-blue);
+    grid-area: h1;
+}
+
+.modal-delete-comment p{
+    grid-area: p;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 400;
+    color: var(--grayish-blue);
+}
+
+.btn-modal-cancel{
+    grid-area: btn-cancel;
+    background-color: var(--grayish-blue);
+}
+
+.btn-modal-delete{
+    grid-area: btn-delete;
+    background-color: var(--soft-red);
+}
+
+.btn-modal-cancel, .btn-modal-delete{
+    padding: 1rem;
+    border-radius: 10px;
+    color: white;
+    font-size: .9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
 
 
 @media screen and (min-width:750px) {
     body{
-        padding: 4rem 2rem;
+        padding: 4rem 2rem 1rem;
     }
 
     main{

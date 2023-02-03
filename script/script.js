@@ -118,6 +118,7 @@ function createComment(comment){
         const btnDelete = document.createElement('button')
         btnDelete.classList.add('btn-delete')
         btnDelete.innerHTML = '<img src="./styles/images/icon-delete.svg" alt="Delete icon">Delete'
+        btnDelete.addEventListener('click', openModalDeleteComment)
         divDeleteEdit.appendChild(btnDelete)
         const btnEdit = document.createElement('button')
         btnEdit.classList.add('btn-edit')
@@ -188,15 +189,6 @@ function btnReplyClicked(event){
 function btnCancelReplyClicked(event){
     event.preventDefault()
     removeAddReplyContainer(event.target)
-    /*
-    //Get the CommentWrapper of the Button
-    const commentWrapper = event.target.closest('.comment-wrapper')
-    //Get the addReplyContainer and delete it
-    const addReplyContainer = commentWrapper.querySelector('.add-reply-container')
-    addReplyContainer.remove()
-    //Enable the Reply Button
-    const btnReply = commentWrapper.querySelector('.btn-reply')
-    btnReply.disabled = false*/
 }
 
 function btnSendReplyClicked(event){
@@ -294,18 +286,37 @@ function btnUpdateCommentClicked(event){
     fromCurrentUser.style.display = "grid"
 }
 
+function openModalDeleteComment(){
+    //Create the Modal Container
+    const divModalBackground = document.createElement('div')
+    divModalBackground.classList.add('modal-background')
+    //Create the Modal Section and child elements
+    const sectionModalDelete = document.createElement('section')
+    sectionModalDelete.classList.add('modal-delete-comment')
+    const modalh1 = document.createElement('h1')
+    modalh1.innerText = "Delete Comment"
+    sectionModalDelete.appendChild(modalh1)
+    const modalp = document.createElement('p')
+    modalp.innerText = "Are you sure you want to delete this comment? This will remove the comment and can't be undone."
+    sectionModalDelete.appendChild(modalp)
+    const btnModalCancel = document.createElement('button')
+    btnModalCancel.classList.add('btn-modal-cancel')
+    btnModalCancel.innerText = "No, cancel"
+    btnModalCancel.addEventListener('click', closeModalDeleteComment)
+    sectionModalDelete.appendChild(btnModalCancel)
+    const btnModalDelete = document.createElement('button')
+    btnModalDelete.classList.add('btn-modal-delete')
+    btnModalDelete.innerText = "Yes, delete"
+    sectionModalDelete.appendChild(btnModalDelete)
+    //Add Modal Section to the Modal Container
+    divModalBackground.appendChild(sectionModalDelete)
+    //Add the Modal Container to the Body
+    document.body.appendChild(divModalBackground)
+    sectionModalDelete.scrollIntoView({behavior:'smooth',block:'center'})
+}
 
-
-//EVENT LISTENERS
-
-/*const btnReply = document.querySelectorAll('.btn-reply')
-btnReply.forEach(button => {
-    //console.log(button)
-    button.addEventListener('click', btnReplyClicked)
-})*/
-
-/*const btnCancelReply = document.querySelectorAll('.btn-cancel-reply')
-btnCancelReply.forEach(button => {
-    console.log(button)
-})*/
+function closeModalDeleteComment(){
+    const modalDeleteComment = document.querySelector('.modal-background')
+    modalDeleteComment.remove()
+}
 
