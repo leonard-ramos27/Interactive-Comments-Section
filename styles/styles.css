@@ -127,6 +127,7 @@ main{
     font-size: .96rem;
     font-weight: 400;
     line-height: 1.5rem;
+    word-wrap: break-word;
 }
 
 .score-section{
@@ -226,6 +227,7 @@ main{
     "user-image user-name date-created"
     "content content content"
     "score score delete-edit";
+    align-items: center;
     gap: 1rem;
 }
 
