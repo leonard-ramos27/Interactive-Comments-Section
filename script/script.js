@@ -5,10 +5,222 @@ import data from './data.json' assert { type: 'json' };
 //SELECTORS
 let currentUser = data.currentUser
 const mainSection = document.getElementsByTagName('main')[0]
+let votedComments = {
+    "upvoted_comments":[],
+    "downvoted_comments":[]
+}
 
 displayComments()
 
 //FUNCTIONS
+
+//MODEL
+
+function generateNewID(){
+    let comments = data.comments
+    let newID = 1
+    comments.forEach(comment => {
+        if(comment.id >= newID){
+            newID = comment.id+1
+        }
+        if(comment.replies.length > 0){
+            comment.replies.forEach(reply => {
+                if(reply.id >= newID){
+                    newID = reply.id+1
+                }
+            })
+        }
+    })
+    return newID
+}
+
+function newComment(content){
+    data.comments.push(new function(){
+        this.id = generateNewID()
+        this.content = content
+        this.createdAt = new Date().toLocaleDateString()
+        this.score = 0
+        this.user = currentUser
+        this.replies = []
+    })
+}
+
+function addNewReply(commentID, replyContent){
+    data.comments.forEach(comment => {
+        if(comment.id == commentID){
+            newReply(comment, comment.user.username, replyContent)
+        }else if(comment.replies.length > 0){
+            comment.replies.forEach(reply => {
+                if(reply.id == commentID){
+                    newReply(comment, reply.user.username, replyContent)
+                }
+            })
+        }
+    })
+    mainSection.innerHTML = ""
+    displayComments()
+}
+
+function newReply(comment, replyingToUsername, replyContent){
+    comment.replies.push(new function(){
+        this.id = generateNewID()
+        this.content = replyContent
+        this.createdAt = new Date().toLocaleDateString()
+        this.score = 0
+        this.replyingTo = replyingToUsername
+        this.user = currentUser
+    })
+}
+
+function retrieveCommentData(commentID){
+    let returnComment = {}
+    data.comments.forEach(comment => {
+        if(comment.id == commentID){
+            returnComment = comment
+        }
+        if(comment.replies.length > 0){
+            comment.replies.forEach(reply =>{
+                if(reply.id == commentID){
+                    returnComment = reply
+                }
+            })
+        }
+    })
+    return returnComment
+}
+
+function updateCommentContent(commentID, newContent){
+    data.comments.forEach(comment => {
+        if(comment.id == commentID){
+            comment.content = newContent
+            comment.createdAt = new Date().toLocaleDateString()
+        }else if(comment.replies.length > 0){
+            comment.replies.forEach(reply => {
+                if(reply.id == commentID){
+                    reply.content = newContent
+                    reply.createdAt = new Date().toLocaleDateString()
+                }
+            })
+        }
+    })
+}
+
+function deleteComment(commentID){
+    const newArrayComments = data.comments.filter(comment => {
+        if(comment.id == commentID){
+            return false
+        }else if(comment.replies.length > 0){
+            const newArrayReplies = comment.replies.filter(reply => {
+                if(reply.id == commentID){
+                    return false
+                }else{
+                    return true
+                }
+            })
+            comment.replies = newArrayReplies
+            return true
+        }else{
+            return true
+        }
+    })
+    data.comments = newArrayComments
+    removeVotedComment(commentID)
+}
+
+function removeVotedComment(commentID){
+    //Check if Comment ID is included in Upvoted Array and remove it
+    if(votedComments.upvoted_comments.length > 0){
+        const newUpVotedList = votedComments.upvoted_comments.filter(ID => {
+            if(ID == commentID){
+                return false
+            }else{
+                return true
+            }
+        })
+        votedComments.upvoted_comments = newUpVotedList
+    }
+    //Check if CommentID is included in Downvoted Array and remove it
+    if(votedComments.downvoted_comments.length > 0){
+        const newDownVotedList = votedComments.downvoted_comments.filter(ID => {
+            if(ID == commentID){
+                return false
+            }else{
+                return true
+            }
+        })
+        votedComments.downvoted_comments = newDownVotedList
+    }
+}
+
+function upvoteComment(commentID){
+    data.comments.forEach(comment => {
+        if(comment.id == commentID){
+            comment.score++
+            addUpvotedComment(commentID)
+        }else if(comment.replies.length > 0){
+            comment.replies.forEach(reply => {
+                if(reply.id == commentID){
+                    reply.score++
+                    addUpvotedComment(commentID)
+                }
+            })
+        }
+    })
+}
+
+function downvoteComment(commentID){
+    data.comments.forEach(comment => {
+        if(comment.id == commentID && comment.score > 0){
+            comment.score--
+            addDownvotedComment(commentID)
+        }else if(comment.replies.length > 0){
+            comment.replies.forEach(reply => {
+                if(reply.id == commentID && reply.score > 0){
+                    reply.score--
+                    addDownvotedComment(commentID)
+                }
+            })
+        }
+    })
+}
+
+function addUpvotedComment(commentID){
+    //Add Comment ID to Upvoted Array
+    votedComments.upvoted_comments.push(commentID)
+    //Check if CommentID is included in Downvoted Array and remove it
+    if(votedComments.downvoted_comments.length > 0){
+        const newDownVotedList = votedComments.downvoted_comments.filter(ID => {
+            if(ID == commentID){
+                return false
+            }else{
+                return true
+            }
+        })
+        votedComments.downvoted_comments = newDownVotedList
+    }
+}
+
+function addDownvotedComment(commentID){
+    //Add Comment ID to Downvoted Array
+    votedComments.downvoted_comments.push(commentID)
+    //Check if Comment ID is included in Upvoted Array and remove it
+    if(votedComments.upvoted_comments.length > 0){
+        const newUpVotedList = votedComments.upvoted_comments.filter(ID => {
+            if(ID == commentID){
+                return false
+            }else{
+                return true
+            }
+        })
+        votedComments.upvoted_comments = newUpVotedList
+    }
+}
+
+
+
+//VIEW
+
+
 function displayComments(){
     let comments = data.comments
     comments.forEach(comment => {
@@ -99,6 +311,7 @@ function createComment(comment){
     scoreSection.classList.add('score-section')
     const btnUpvote = document.createElement('button')
     btnUpvote.classList.add('btn-upvote')
+    btnUpvote.addEventListener('click', btnUpvoteClicked)
     scoreSection.appendChild(btnUpvote)
     const commentScore = document.createElement('p')
     commentScore.innerText = comment.score
@@ -106,6 +319,7 @@ function createComment(comment){
     scoreSection.appendChild(commentScore)
     const btnDownvote = document.createElement('button')
     btnDownvote.classList.add('btn-downvote')
+    btnDownvote.addEventListener('click', btnDownvoteClicked)
     scoreSection.appendChild(btnDownvote)
     commentContainer.appendChild(scoreSection)
     //Check if comment is from the current user or from another user
@@ -140,6 +354,88 @@ function createComment(comment){
     }
     commentWrapper.appendChild(commentContainer)
     return commentWrapper
+}
+
+function removeAddReplyContainer(button){
+    //Get the CommentWrapper of the Button
+    const commentWrapper = button.closest('.comment-wrapper')
+    //Get the addReplyContainer and delete it
+    const addReplyContainer = commentWrapper.querySelector('.add-reply-container')
+    addReplyContainer.remove()
+    //Enable the Reply Button
+    const btnReply = commentWrapper.querySelector('.btn-reply')
+    btnReply.disabled = false
+}
+
+function openModalDeleteComment(event){
+    //Get the CommentWrapper of the Button
+    const commentWrapper = event.target.closest('.comment-wrapper')
+    //Create the Modal Container
+    const divModalBackground = document.createElement('div')
+    divModalBackground.classList.add('modal-background')
+    //Create the Modal Section and child elements
+    const sectionModalDelete = document.createElement('section')
+    sectionModalDelete.classList.add('modal-delete-comment')
+    const modalh1 = document.createElement('h1')
+    modalh1.innerText = "Delete Comment"
+    sectionModalDelete.appendChild(modalh1)
+    const modalp = document.createElement('p')
+    modalp.innerText = "Are you sure you want to delete this comment? This will remove the comment and can't be undone."
+    sectionModalDelete.appendChild(modalp)
+    const btnModalCancel = document.createElement('button')
+    btnModalCancel.classList.add('btn-modal-cancel')
+    btnModalCancel.innerText = "No, cancel"
+    btnModalCancel.addEventListener('click', closeModalDeleteComment)
+    sectionModalDelete.appendChild(btnModalCancel)
+    const btnModalDelete = document.createElement('button')
+    btnModalDelete.classList.add('btn-modal-delete')
+    btnModalDelete.innerText = "Yes, delete"
+    btnModalDelete.dataset.comment_id = commentWrapper.dataset.comment_id
+    btnModalDelete.addEventListener('click', btnModalDeleteClicked)
+    sectionModalDelete.appendChild(btnModalDelete)
+    //Add Modal Section to the Modal Container
+    divModalBackground.appendChild(sectionModalDelete)
+    //Add the Modal Container to the Body
+    document.body.appendChild(divModalBackground)
+    sectionModalDelete.scrollIntoView({behavior:'smooth',block:'center'})
+}
+
+function closeModalDeleteComment(){
+    const modalDeleteComment = document.querySelector('.modal-background')
+    modalDeleteComment.remove()
+}
+
+function updateCommentScore(commentID, commentWrapper){
+    //Get Score element
+    const commentScore = commentWrapper.querySelector(".score") 
+    //Update Score value
+    data.comments.forEach(comment => {
+        if(comment.id == commentID){
+            commentScore.innerText = comment.score
+        }else if(comment.replies.length>0){
+            comment.replies.forEach(reply => {
+                if(reply.id == commentID){
+                    commentScore.innerText = reply.score
+                }
+            })
+        }
+    })
+}
+
+
+
+//CONTROLLER
+
+
+function btnSendCommentClicked(event){
+    event.preventDefault()
+    //Get the Comment Content
+    const addCommentContainer = document.querySelector('.add-comment-container')
+    //Add New Comment to Array
+    newComment(addCommentContainer.querySelector("#txt-add-comment").value)
+    //Reset Displayed Comments
+    mainSection.innerHTML = ""
+    displayComments()
 }
 
 function btnReplyClicked(event){
@@ -201,70 +497,9 @@ function btnSendReplyClicked(event){
     removeAddReplyContainer(event.target)
 }
 
-function addNewReply(commentID, replyContent){
-    data.comments.forEach(comment => {
-        if(comment.id == commentID){
-            newReply(comment, comment.user.username, replyContent)
-        }else if(comment.replies.length > 0){
-            comment.replies.forEach(reply => {
-                if(reply.id == commentID){
-                    newReply(comment, reply.user.username, replyContent)
-                }
-            })
-        }
-    })
-    console.log(data.comments)
-    mainSection.innerHTML = ""
-    displayComments()
-}
-
-function newReply(comment, replyingToUsername, replyContent){
-    console.log(comment)
-    comment.replies.push(new function(){
-        this.id = generateNewID()
-        this.content = replyContent
-        this.createdAt = new Date().toLocaleDateString()
-        this.score = 0
-        this.replyingTo = replyingToUsername
-        this.user = currentUser
-    })
-}
-
-function removeAddReplyContainer(button){
-    //Get the CommentWrapper of the Button
-    const commentWrapper = button.closest('.comment-wrapper')
-    //Get the addReplyContainer and delete it
-    const addReplyContainer = commentWrapper.querySelector('.add-reply-container')
-    addReplyContainer.remove()
-    //Enable the Reply Button
-    const btnReply = commentWrapper.querySelector('.btn-reply')
-    btnReply.disabled = false
-}
-
 function btnEditReplyClicked(event){
     //Get the CommentWrapper of the Button
     const commentWrapper = event.target.closest('.comment-wrapper')
-    //Retrieve Comment Content
-    /*const commentId = commentWrapper.dataset.comment_id
-    console.log(commentId)
-    let commentData = {}
-    data.comments.forEach(comment => {
-        console.log(comment.id)
-        if(comment.id == commentId){
-            commentData = Object.assign({}, comment)
-            console.log("found it!!")
-        }
-        if(comment.replies.length > 0){
-            comment.replies.forEach(reply =>{
-                console.log(reply.id)
-                if(reply.id == commentId){
-                    commentData = Object.assign({}, reply)
-                    console.log("reply is found")
-                }
-            })
-        }
-    })
-    console.log(commentData)*/
     let commentData = retrieveCommentData(commentWrapper.dataset.comment_id)
     //Create Update User Comment section
     const updateCommentSection = document.createElement('section')
@@ -295,6 +530,7 @@ function btnEditReplyClicked(event){
     formScoreSection.classList.add('score-section')
     const btnUpvote = document.createElement('button')
     btnUpvote.classList.add('btn-upvote')
+    btnUpvote.disabled = true
     formScoreSection.appendChild(btnUpvote)
     const commentScore = document.createElement('p')
     commentScore.innerText = commentWrapper.querySelector('.score').innerText
@@ -302,6 +538,7 @@ function btnEditReplyClicked(event){
     formScoreSection.appendChild(commentScore)
     const btnDownvote = document.createElement('button')
     btnDownvote.classList.add('btn-downvote')
+    btnDownvote.disabled = true
     formScoreSection.appendChild(btnDownvote)
     formUpdateComment.appendChild(formScoreSection)
     //Create Text area and add to form
@@ -331,188 +568,94 @@ function btnEditReplyClicked(event){
     fromCurrentUser.style.display = "none"
 }
 
-function retrieveCommentData(commentID){
-    let returnComment = {}
-    data.comments.forEach(comment => {
-        if(comment.id == commentID){
-            returnComment = comment
-        }
-        if(comment.replies.length > 0){
-            comment.replies.forEach(reply =>{
-                if(reply.id == commentID){
-                    returnComment = reply
-                }
-            })
-        }
-    })
-    return returnComment
-}
-
 function btnUpdateCommentClicked(event){
     event.preventDefault()
     //Get the CommentWrapper of the Button
     const commentWrapper = event.target.closest('.comment-wrapper')
+    //Update Selected Comment
     updateCommentContent(commentWrapper.dataset.comment_id, commentWrapper.querySelector('#txt-update-comment').value)
-    console.log(data.comments)
+    //Reset Displayed Comments
     mainSection.innerHTML = ""
     displayComments()
-    /*
-    //Remove the Update Comment Section
-    const UpdateCommentSection = commentWrapper.querySelector('.update-user-comment')
-    UpdateCommentSection.remove()
-    //Display back the From current User section
-    const fromCurrentUser = commentWrapper.querySelector('.from-current-user')
-    fromCurrentUser.style.display = "grid"*/
-}
-
-function updateCommentContent(commentID, newContent){
-    console.log(commentID, newContent)
-    data.comments.forEach(comment => {
-        if(comment.id == commentID){
-            comment.content = newContent
-            comment.createdAt = new Date().toLocaleDateString()
-        }else if(comment.replies.length > 0){
-            comment.replies.forEach(reply => {
-                if(reply.id == commentID){
-                    reply.content = newContent
-                    reply.createdAt = new Date().toLocaleDateString()
-                }
-            })
-        }
-    })
-}
-
-function openModalDeleteComment(event){
-    //Get the CommentWrapper of the Button
-    const commentWrapper = event.target.closest('.comment-wrapper')
-    //console.log(commentWrapper.dataset.comment_id)
-    //Create the Modal Container
-    const divModalBackground = document.createElement('div')
-    divModalBackground.classList.add('modal-background')
-    //Create the Modal Section and child elements
-    const sectionModalDelete = document.createElement('section')
-    sectionModalDelete.classList.add('modal-delete-comment')
-    const modalh1 = document.createElement('h1')
-    modalh1.innerText = "Delete Comment"
-    sectionModalDelete.appendChild(modalh1)
-    const modalp = document.createElement('p')
-    modalp.innerText = "Are you sure you want to delete this comment? This will remove the comment and can't be undone."
-    sectionModalDelete.appendChild(modalp)
-    const btnModalCancel = document.createElement('button')
-    btnModalCancel.classList.add('btn-modal-cancel')
-    btnModalCancel.innerText = "No, cancel"
-    btnModalCancel.addEventListener('click', closeModalDeleteComment)
-    sectionModalDelete.appendChild(btnModalCancel)
-    const btnModalDelete = document.createElement('button')
-    btnModalDelete.classList.add('btn-modal-delete')
-    btnModalDelete.innerText = "Yes, delete"
-    btnModalDelete.dataset.comment_id = commentWrapper.dataset.comment_id
-    btnModalDelete.addEventListener('click', btnModalDeleteClicked)
-    sectionModalDelete.appendChild(btnModalDelete)
-    //Add Modal Section to the Modal Container
-    divModalBackground.appendChild(sectionModalDelete)
-    //Add the Modal Container to the Body
-    document.body.appendChild(divModalBackground)
-    sectionModalDelete.scrollIntoView({behavior:'smooth',block:'center'})
 }
 
 function btnModalDeleteClicked(event){
-    //console.log(event.target.dataset.comment_id)
     deleteComment(event.target.dataset.comment_id)
     closeModalDeleteComment()
     mainSection.innerHTML = ""
     displayComments()
 }
 
-function deleteComment(commentID){
-    console.log(commentID)
-    const newArrayComments = data.comments.filter(comment => {
-        if(comment.id == commentID){
-            console.log('deleting comment', comment.id)
-            return false
-        }else if(comment.replies.length > 0){
-            console.log("comment has replies")
-            const newArrayReplies = comment.replies.filter(reply => {
-                if(reply.id == commentID){
-                    return false
-                }else{
-                    return true
-                }
-            })
-            console.log(newArrayReplies)
-            comment.replies = newArrayReplies
-            return true
+function btnUpvoteClicked(event){
+    //Get the CommentWrapper and Comment ID
+    const commentWrapper = event.target.closest('.comment-wrapper')
+    const commentID = parseInt(commentWrapper.dataset.comment_id) 
+    //Check if user has already upvoted the comment
+    if(votedComments.upvoted_comments.length > 0){
+        if(!votedComments.upvoted_comments.includes(commentID)){
+            upvoteComment(commentID)
+            updateCommentScore(commentID, commentWrapper)
         }else{
-            return true
-            console.log(comment.id)
+            console.log("Comment has already been upvoted")
         }
-    })
-    data.comments = newArrayComments
-    console.log(data.comments)
-}
-
-function closeModalDeleteComment(){
-    const modalDeleteComment = document.querySelector('.modal-background')
-    modalDeleteComment.remove()
-}
-
-function generateNewID(){
-    let comments = data.comments
-    let newID = 1
-    comments.forEach(comment => {
-        if(comment.id >= newID){
-            newID = comment.id+1
-        }
-        if(comment.replies.length > 0){
-            comment.replies.forEach(reply => {
-                if(reply.id >= newID){
-                    newID = reply.id+1
-                }
-            })
-        }
-    })
-    return newID
-}
-
-function newComment(content){
-    data.comments.push(new function(){
-        this.id = generateNewID()
-        this.content = content
-        this.createdAt = new Date().toLocaleDateString()
-        this.score = 0
-        this.user = currentUser
-        this.replies = []
-    })
-    /*this.id = generateNewID()
-    this.content = content
-    this.createdAt = Date.now()
-    this.score = 0
-    this.user = {
-        "image" : currentUser.image,
-        "username" : currentUser.username
+    }else{
+        upvoteComment(commentID)
+        updateCommentScore(commentID, commentWrapper)
     }
-    this.replies = []*/
 }
 
-function btnSendCommentClicked(event){
-    event.preventDefault()
-    const addCommentContainer = document.querySelector('.add-comment-container')
-    //const newComment = new Comment(addCommentContainer.querySelector("#txt-add-comment").value)
-    //data.comments.push(newComment)
-    //const content = addCommentContainer.querySelector("#txt-add-comment").value
-    newComment(addCommentContainer.querySelector("#txt-add-comment").value)
-    /*data.comments.push(new function (){
-        this.id = generateNewID()
-        this.content = content
-        this.createdAt = new Date()
-        this.score = 0
-        this.user = {
-            "image" : currentUser.image,
-            "username" : currentUser.username
+function btnDownvoteClicked(event){
+    //Get the CommentWrapper and Comment ID
+    const commentWrapper = event.target.closest('.comment-wrapper')
+    const commentID = parseInt(commentWrapper.dataset.comment_id) 
+    //Check if user has already downvoted the comment
+    if(votedComments.downvoted_comments.length > 0){
+        if(!votedComments.downvoted_comments.includes(commentID)){
+            downvoteComment(commentID)
+            updateCommentScore(commentID, commentWrapper)
+        }else{
+            console.log("Comment has already been downvoted")
         }
-        this.replies = []
-    })*/
-    console.log(data.comments)
-    mainSection.innerHTML = ""
-    displayComments()
+    }else{
+        downvoteComment(commentID)
+        updateCommentScore(commentID, commentWrapper)
+    }
 }
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
