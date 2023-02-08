@@ -3,21 +3,41 @@
 import data from './data.json' assert { type: 'json' };
 
 //SELECTORS
-let currentUser = data.currentUser
 const mainSection = document.getElementsByTagName('main')[0]
-let votedComments = {
-    "upvoted_comments":[],
-    "downvoted_comments":[]
-}
+let commentsData = {}
+let currentUser = null
 
-displayComments()
 
 //FUNCTIONS
 
+getLocalCommentsData()
+displayComments()
+
+
 //MODEL
 
+function getLocalCommentsData(){
+    if(localStorage.getItem('commentsData') === null){
+        commentsData = data
+        currentUser = commentsData.currentUser
+        commentsData.votedComments = {
+            "upvoted_comments":[],
+            "downvoted_comments":[]
+        }
+    }else{
+        commentsData = JSON.parse(localStorage.getItem('commentsData'))
+        currentUser = commentsData.currentUser
+    }
+}
+
+function updateLocalCommentsData(){
+    if(commentsData !== null){
+        localStorage.setItem('commentsData', JSON.stringify(commentsData))
+    }
+}
+
 function generateNewID(){
-    let comments = data.comments
+    let comments = commentsData.comments
     let newID = 1
     comments.forEach(comment => {
         if(comment.id >= newID){
@@ -35,7 +55,7 @@ function generateNewID(){
 }
 
 function newComment(content){
-    data.comments.push(new function(){
+    commentsData.comments.push(new function(){
         this.id = generateNewID()
         this.content = content
         this.createdAt = new Date().toLocaleDateString()
@@ -46,7 +66,7 @@ function newComment(content){
 }
 
 function addNewReply(commentID, replyContent){
-    data.comments.forEach(comment => {
+    commentsData.comments.forEach(comment => {
         if(comment.id == commentID){
             newReply(comment, comment.user.username, replyContent)
         }else if(comment.replies.length > 0){
@@ -74,7 +94,7 @@ function newReply(comment, replyingToUsername, replyContent){
 
 function retrieveCommentData(commentID){
     let returnComment = {}
-    data.comments.forEach(comment => {
+    commentsData.comments.forEach(comment => {
         if(comment.id == commentID){
             returnComment = comment
         }
@@ -90,7 +110,7 @@ function retrieveCommentData(commentID){
 }
 
 function updateCommentContent(commentID, newContent){
-    data.comments.forEach(comment => {
+    commentsData.comments.forEach(comment => {
         if(comment.id == commentID){
             comment.content = newContent
             comment.createdAt = new Date().toLocaleDateString()
@@ -106,7 +126,7 @@ function updateCommentContent(commentID, newContent){
 }
 
 function deleteComment(commentID){
-    const newArrayComments = data.comments.filter(comment => {
+    const newArrayComments = commentsData.comments.filter(comment => {
         if(comment.id == commentID){
             return false
         }else if(comment.replies.length > 0){
@@ -123,37 +143,37 @@ function deleteComment(commentID){
             return true
         }
     })
-    data.comments = newArrayComments
+    commentsData.comments = newArrayComments
     removeVotedComment(commentID)
 }
 
 function removeVotedComment(commentID){
     //Check if Comment ID is included in Upvoted Array and remove it
-    if(votedComments.upvoted_comments.length > 0){
-        const newUpVotedList = votedComments.upvoted_comments.filter(ID => {
+    if(commentsData.votedComments.upvoted_comments.length > 0){
+        const newUpVotedList = commentsData.votedComments.upvoted_comments.filter(ID => {
             if(ID == commentID){
                 return false
             }else{
                 return true
             }
         })
-        votedComments.upvoted_comments = newUpVotedList
+        commentsData.votedComments.upvoted_comments = newUpVotedList
     }
     //Check if CommentID is included in Downvoted Array and remove it
-    if(votedComments.downvoted_comments.length > 0){
-        const newDownVotedList = votedComments.downvoted_comments.filter(ID => {
+    if(commentsData.votedComments.downvoted_comments.length > 0){
+        const newDownVotedList = commentsData.votedComments.downvoted_comments.filter(ID => {
             if(ID == commentID){
                 return false
             }else{
                 return true
             }
         })
-        votedComments.downvoted_comments = newDownVotedList
+        commentsData.votedComments.downvoted_comments = newDownVotedList
     }
 }
 
 function upvoteComment(commentID){
-    data.comments.forEach(comment => {
+    commentsData.comments.forEach(comment => {
         if(comment.id == commentID){
             comment.score++
             addUpvotedComment(commentID)
@@ -169,7 +189,7 @@ function upvoteComment(commentID){
 }
 
 function downvoteComment(commentID){
-    data.comments.forEach(comment => {
+    commentsData.comments.forEach(comment => {
         if(comment.id == commentID && comment.score > 0){
             comment.score--
             addDownvotedComment(commentID)
@@ -186,33 +206,33 @@ function downvoteComment(commentID){
 
 function addUpvotedComment(commentID){
     //Add Comment ID to Upvoted Array
-    votedComments.upvoted_comments.push(commentID)
+    commentsData.votedComments.upvoted_comments.push(commentID)
     //Check if CommentID is included in Downvoted Array and remove it
-    if(votedComments.downvoted_comments.length > 0){
-        const newDownVotedList = votedComments.downvoted_comments.filter(ID => {
+    if(commentsData.votedComments.downvoted_comments.length > 0){
+        const newDownVotedList = commentsData.votedComments.downvoted_comments.filter(ID => {
             if(ID == commentID){
                 return false
             }else{
                 return true
             }
         })
-        votedComments.downvoted_comments = newDownVotedList
+        commentsData.votedComments.downvoted_comments = newDownVotedList
     }
 }
 
 function addDownvotedComment(commentID){
     //Add Comment ID to Downvoted Array
-    votedComments.downvoted_comments.push(commentID)
+    commentsData.votedComments.downvoted_comments.push(commentID)
     //Check if Comment ID is included in Upvoted Array and remove it
-    if(votedComments.upvoted_comments.length > 0){
-        const newUpVotedList = votedComments.upvoted_comments.filter(ID => {
+    if(commentsData.votedComments.upvoted_comments.length > 0){
+        const newUpVotedList = commentsData.votedComments.upvoted_comments.filter(ID => {
             if(ID == commentID){
                 return false
             }else{
                 return true
             }
         })
-        votedComments.upvoted_comments = newUpVotedList
+        commentsData.votedComments.upvoted_comments = newUpVotedList
     }
 }
 
@@ -222,7 +242,7 @@ function addDownvotedComment(commentID){
 
 
 function displayComments(){
-    let comments = data.comments
+    let comments = commentsData.comments
     comments.forEach(comment => {
         //Create Newcomment and add it to Main
         const newComment = createComment(comment)
@@ -409,7 +429,7 @@ function updateCommentScore(commentID, commentWrapper){
     //Get Score element
     const commentScore = commentWrapper.querySelector(".score") 
     //Update Score value
-    data.comments.forEach(comment => {
+    commentsData.comments.forEach(comment => {
         if(comment.id == commentID){
             commentScore.innerText = comment.score
         }else if(comment.replies.length>0){
@@ -433,6 +453,8 @@ function btnSendCommentClicked(event){
     const addCommentContainer = document.querySelector('.add-comment-container')
     //Add New Comment to Array
     newComment(addCommentContainer.querySelector("#txt-add-comment").value)
+    //Update Local Storage
+    updateLocalCommentsData()
     //Reset Displayed Comments
     mainSection.innerHTML = ""
     displayComments()
@@ -494,6 +516,7 @@ function btnSendReplyClicked(event){
     //Get the CommentWrapper and Comment ID
     const commentWrapper = event.target.closest('.comment-wrapper')
     addNewReply(commentWrapper.dataset.comment_id, commentWrapper.querySelector('.txt-comment').value)
+    updateLocalCommentsData()
     removeAddReplyContainer(event.target)
 }
 
@@ -574,6 +597,8 @@ function btnUpdateCommentClicked(event){
     const commentWrapper = event.target.closest('.comment-wrapper')
     //Update Selected Comment
     updateCommentContent(commentWrapper.dataset.comment_id, commentWrapper.querySelector('#txt-update-comment').value)
+    //Update Local Storage
+    updateLocalCommentsData()
     //Reset Displayed Comments
     mainSection.innerHTML = ""
     displayComments()
@@ -581,6 +606,7 @@ function btnUpdateCommentClicked(event){
 
 function btnModalDeleteClicked(event){
     deleteComment(event.target.dataset.comment_id)
+    updateLocalCommentsData()
     closeModalDeleteComment()
     mainSection.innerHTML = ""
     displayComments()
@@ -591,15 +617,17 @@ function btnUpvoteClicked(event){
     const commentWrapper = event.target.closest('.comment-wrapper')
     const commentID = parseInt(commentWrapper.dataset.comment_id) 
     //Check if user has already upvoted the comment
-    if(votedComments.upvoted_comments.length > 0){
-        if(!votedComments.upvoted_comments.includes(commentID)){
+    if(commentsData.votedComments.upvoted_comments.length > 0){
+        if(!commentsData.votedComments.upvoted_comments.includes(commentID)){
             upvoteComment(commentID)
+            updateLocalCommentsData()
             updateCommentScore(commentID, commentWrapper)
         }else{
             console.log("Comment has already been upvoted")
         }
     }else{
         upvoteComment(commentID)
+        updateLocalCommentsData()
         updateCommentScore(commentID, commentWrapper)
     }
 }
@@ -609,15 +637,17 @@ function btnDownvoteClicked(event){
     const commentWrapper = event.target.closest('.comment-wrapper')
     const commentID = parseInt(commentWrapper.dataset.comment_id) 
     //Check if user has already downvoted the comment
-    if(votedComments.downvoted_comments.length > 0){
-        if(!votedComments.downvoted_comments.includes(commentID)){
+    if(commentsData.votedComments.downvoted_comments.length > 0){
+        if(!commentsData.votedComments.downvoted_comments.includes(commentID)){
             downvoteComment(commentID)
+            updateLocalCommentsData()
             updateCommentScore(commentID, commentWrapper)
         }else{
             console.log("Comment has already been downvoted")
         }
     }else{
         downvoteComment(commentID)
+        updateLocalCommentsData()
         updateCommentScore(commentID, commentWrapper)
     }
 }
