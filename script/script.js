@@ -451,13 +451,26 @@ function btnSendCommentClicked(event){
     event.preventDefault()
     //Get the Comment Content
     const addCommentContainer = document.querySelector('.add-comment-container')
+    const commentContent = addCommentContainer.querySelector("#txt-add-comment").value.trim()
+    //console.log(commentContent, typeof(commentContent))
+    if(commentContent !== ""){
+        //Add New Comment to Array
+        newComment(commentContent)
+        //Update Local Storage
+        updateLocalCommentsData()
+        //Reset Displayed Comments
+        mainSection.innerHTML = ""
+        displayComments()
+    }else{
+        //console.log(addCommentContainer.querySelector("#txt-add-comment"))
+        addCommentContainer.querySelector("#txt-add-comment").focus()
+    }
     //Add New Comment to Array
-    newComment(addCommentContainer.querySelector("#txt-add-comment").value)
-    //Update Local Storage
-    updateLocalCommentsData()
+    //newComment(addCommentContainer.querySelector("#txt-add-comment").value)
+    
     //Reset Displayed Comments
-    mainSection.innerHTML = ""
-    displayComments()
+    //mainSection.innerHTML = ""
+    //displayComments()
 }
 
 function btnReplyClicked(event){
@@ -513,11 +526,18 @@ function btnCancelReplyClicked(event){
 
 function btnSendReplyClicked(event){
     event.preventDefault()
-    //Get the CommentWrapper and Comment ID
+    //Get the CommentWrapper, Comment ID and Content 
     const commentWrapper = event.target.closest('.comment-wrapper')
-    addNewReply(commentWrapper.dataset.comment_id, commentWrapper.querySelector('.txt-comment').value)
-    updateLocalCommentsData()
-    removeAddReplyContainer(event.target)
+    const replyContent = commentWrapper.querySelector('.txt-comment').value.trim()
+    //Check if content is empty
+    if(replyContent !== ""){
+        addNewReply(commentWrapper.dataset.comment_id, replyContent)
+        updateLocalCommentsData()
+        removeAddReplyContainer(event.target)
+    }else{
+        commentWrapper.querySelector('.txt-comment').focus()
+    }
+    
 }
 
 function btnEditReplyClicked(event){
@@ -595,13 +615,19 @@ function btnUpdateCommentClicked(event){
     event.preventDefault()
     //Get the CommentWrapper of the Button
     const commentWrapper = event.target.closest('.comment-wrapper')
-    //Update Selected Comment
-    updateCommentContent(commentWrapper.dataset.comment_id, commentWrapper.querySelector('#txt-update-comment').value)
-    //Update Local Storage
-    updateLocalCommentsData()
-    //Reset Displayed Comments
-    mainSection.innerHTML = ""
-    displayComments()
+    const commentContent = commentWrapper.querySelector('#txt-update-comment').value.trim()
+    //Check if content is empty
+    if(commentContent !== ""){
+        //Update Selected Comment
+        updateCommentContent(commentWrapper.dataset.comment_id, commentContent)
+        //Update Local Storage
+        updateLocalCommentsData()
+        //Reset Displayed Comments
+        mainSection.innerHTML = ""
+        displayComments()
+    }else{
+        commentWrapper.querySelector('#txt-update-comment').focus()
+    }
 }
 
 function btnModalDeleteClicked(event){
