@@ -376,12 +376,28 @@ function createComment(comment){
     return commentWrapper
 }
 
+function removeOtherReplyContainer(){
+    const replyContainer = document.querySelector('.add-reply-container')
+    if(replyContainer !== null){
+        const btnReply = replyContainer.closest('.comment-wrapper').querySelector('.btn-reply')
+        btnReply.disabled = false
+        replyContainer.style.animation = "slide-out .3s ease"
+        replyContainer.addEventListener('animationend', ()=>{
+            replyContainer.remove()
+        })
+    }
+}
+
 function removeAddReplyContainer(button){
     //Get the CommentWrapper of the Button
     const commentWrapper = button.closest('.comment-wrapper')
     //Get the addReplyContainer and delete it
     const addReplyContainer = commentWrapper.querySelector('.add-reply-container')
-    addReplyContainer.remove()
+    //Add Animation and wait for it to end before removing container
+    addReplyContainer.style.animation = "slide-out .3s ease"
+    addReplyContainer.addEventListener("animationend", ()=>{
+        addReplyContainer.remove()
+    })
     //Enable the Reply Button
     const btnReply = commentWrapper.querySelector('.btn-reply')
     btnReply.disabled = false
@@ -452,7 +468,6 @@ function btnSendCommentClicked(event){
     //Get the Comment Content
     const addCommentContainer = document.querySelector('.add-comment-container')
     const commentContent = addCommentContainer.querySelector("#txt-add-comment").value.trim()
-    //console.log(commentContent, typeof(commentContent))
     if(commentContent !== ""){
         //Add New Comment to Array
         newComment(commentContent)
@@ -462,18 +477,12 @@ function btnSendCommentClicked(event){
         mainSection.innerHTML = ""
         displayComments()
     }else{
-        //console.log(addCommentContainer.querySelector("#txt-add-comment"))
         addCommentContainer.querySelector("#txt-add-comment").focus()
     }
-    //Add New Comment to Array
-    //newComment(addCommentContainer.querySelector("#txt-add-comment").value)
-    
-    //Reset Displayed Comments
-    //mainSection.innerHTML = ""
-    //displayComments()
 }
 
 function btnReplyClicked(event){
+    removeOtherReplyContainer()
     //Get the CommentWrapper of the Button
     const commentWrapper = event.target.closest('.comment-wrapper')
     //Create the Add Reply Section
@@ -513,10 +522,14 @@ function btnReplyClicked(event){
     formAddReply.appendChild(formBtnCancel)
     //Add Form to Add Reply Section
     addReplyContainer.appendChild(formAddReply)
+    //Add Animation to Reply Section
+    addReplyContainer.style.animation = "slide-in .5s ease"
     //Add Section to Comment Wrapper
     commentWrapper.appendChild(addReplyContainer)
     //Disable the Reply Button
     event.target.disabled = true
+    //Focus TextArea
+    formTextArea.focus()
 }
 
 function btnCancelReplyClicked(event){
@@ -609,6 +622,8 @@ function btnEditReplyClicked(event){
     //Hide the From Current User Section
     const fromCurrentUser = commentWrapper.querySelector('.from-current-user')
     fromCurrentUser.style.display = "none"
+    //Focus TextArea
+    formTextArea.focus()
 }
 
 function btnUpdateCommentClicked(event){
@@ -648,8 +663,6 @@ function btnUpvoteClicked(event){
             upvoteComment(commentID)
             updateLocalCommentsData()
             updateCommentScore(commentID, commentWrapper)
-        }else{
-            console.log("Comment has already been upvoted")
         }
     }else{
         upvoteComment(commentID)
@@ -668,8 +681,6 @@ function btnDownvoteClicked(event){
             downvoteComment(commentID)
             updateLocalCommentsData()
             updateCommentScore(commentID, commentWrapper)
-        }else{
-            console.log("Comment has already been downvoted")
         }
     }else{
         downvoteComment(commentID)
