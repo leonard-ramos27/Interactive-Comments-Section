@@ -58,7 +58,8 @@ function newComment(content){
     commentsData.comments.push(new function(){
         this.id = generateNewID()
         this.content = content
-        this.createdAt = new Date().toLocaleDateString()
+        const options = {year: 'numeric', month: 'short', day: 'numeric' };
+        this.createdAt = new Date().toLocaleDateString('en-us', options)
         this.score = 0
         this.user = currentUser
         this.replies = []
@@ -85,7 +86,8 @@ function newReply(comment, replyingToUsername, replyContent){
     comment.replies.push(new function(){
         this.id = generateNewID()
         this.content = replyContent
-        this.createdAt = new Date().toLocaleDateString()
+        const options = {year: 'numeric', month: 'short', day: 'numeric' };
+        this.createdAt = new Date().toLocaleDateString('en-us', options)
         this.score = 0
         this.replyingTo = replyingToUsername
         this.user = currentUser
@@ -113,12 +115,14 @@ function updateCommentContent(commentID, newContent){
     commentsData.comments.forEach(comment => {
         if(comment.id == commentID){
             comment.content = newContent
-            comment.createdAt = new Date().toLocaleDateString()
+            const options = {year: 'numeric', month: 'short', day: 'numeric' };
+            comment.createdAt = new Date().toLocaleDateString('en-us', options)
         }else if(comment.replies.length > 0){
             comment.replies.forEach(reply => {
                 if(reply.id == commentID){
                     reply.content = newContent
-                    reply.createdAt = new Date().toLocaleDateString()
+                    const options = {year: 'numeric', month: 'short', day: 'numeric' };
+                    reply.createdAt = new Date().toLocaleDateString('en-us', options)
                 }
             })
         }
@@ -319,6 +323,7 @@ function createComment(comment){
     //Create Date Created and append to Commentcontainer
     const dateCreated = document.createElement('p')
     dateCreated.innerText = comment.createdAt
+    console.log(comment.createdAt, typeof(comment.createdAt))
     dateCreated.classList.add('date-created')
     commentContainer.appendChild(dateCreated)
     //Create Comment content and append to Commentcontainer
@@ -353,12 +358,12 @@ function createComment(comment){
         divDeleteEdit.classList.add('btn-delete-edit')
         const btnDelete = document.createElement('button')
         btnDelete.classList.add('btn-delete')
-        btnDelete.innerHTML = '<img src="./styles/images/icon-delete.svg" alt="Delete icon">Delete'
+        btnDelete.innerHTML = '<img src="./images/icon-delete.svg" alt="Delete icon">Delete'
         btnDelete.addEventListener('click', openModalDeleteComment)
         divDeleteEdit.appendChild(btnDelete)
         const btnEdit = document.createElement('button')
         btnEdit.classList.add('btn-edit')
-        btnEdit.innerHTML = '<img src="./styles/images/icon-edit.svg" alt="Edit icon">Edit'
+        btnEdit.innerHTML = '<img src="./images/icon-edit.svg" alt="Edit icon">Edit'
         btnEdit.addEventListener('click', btnEditReplyClicked)
         divDeleteEdit.appendChild(btnEdit)
         commentContainer.appendChild(divDeleteEdit)
@@ -368,7 +373,7 @@ function createComment(comment){
         //Create Reply button and append to Commentcontainer
         const btnReply = document.createElement('button')
         btnReply.classList.add('btn-reply')
-        btnReply.innerHTML = '<img src="./styles/images/icon-reply.svg" alt="Reply icon">Reply'
+        btnReply.innerHTML = '<img src="./images/icon-reply.svg" alt="Reply icon">Reply'
         btnReply.addEventListener('click',btnReplyClicked)
         commentContainer.appendChild(btnReply)
     }

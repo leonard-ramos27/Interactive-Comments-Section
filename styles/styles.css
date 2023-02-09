@@ -151,11 +151,11 @@ main{
 }
 
 .btn-upvote{
-    background-image: url(./images/icon-plus.svg);
+    background-image: url(../images/icon-plus.svg);
 }
 
 .btn-downvote{
-    background-image: url(./images/icon-minus.svg);
+    background-image: url(../images/icon-minus.svg);
 }
 
 .btn-reply{
