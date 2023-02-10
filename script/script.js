@@ -1,6 +1,6 @@
 
 //Import data from JSON file
-import data from './data.json' assert { type: 'json' };
+//import data from './data.json' assert { type: 'json' };
 
 //SELECTORS
 const mainSection = document.getElementsByTagName('main')[0]
@@ -11,22 +11,35 @@ let currentUser = null
 //FUNCTIONS
 
 getLocalCommentsData()
-displayComments()
+//displayComments()
 
 
 //MODEL
 
 function getLocalCommentsData(){
     if(localStorage.getItem('commentsData') === null){
-        commentsData = data
-        currentUser = commentsData.currentUser
-        commentsData.votedComments = {
-            "upvoted_comments":[],
-            "downvoted_comments":[]
+        const requestData = new XMLHttpRequest()
+        requestData.open('GET', 'https://leonard-ramos27.github.io/Interactive-Comments-Section/script/data.json')
+        requestData.onload = () => {
+            if(requestData.status >= 200 && requestData.status < 400){
+                const receivedData = JSON.parse(requestData.responseText)
+                console.log(receivedData)
+                commentsData = receivedData
+                currentUser = commentsData.currentUser
+                commentsData.votedComments = {
+                    "upvoted_comments":[],
+                    "downvoted_comments":[]
+                }
+                displayComments()
+            }else{
+                alert("Error Loading Data")
+            }
         }
+        requestData.send()
     }else{
         commentsData = JSON.parse(localStorage.getItem('commentsData'))
         currentUser = commentsData.currentUser
+        displayComments()
     }
 }
 
@@ -323,7 +336,6 @@ function createComment(comment){
     //Create Date Created and append to Commentcontainer
     const dateCreated = document.createElement('p')
     dateCreated.innerText = comment.createdAt
-    console.log(comment.createdAt, typeof(comment.createdAt))
     dateCreated.classList.add('date-created')
     commentContainer.appendChild(dateCreated)
     //Create Comment content and append to Commentcontainer

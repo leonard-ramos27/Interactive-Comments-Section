@@ -398,7 +398,7 @@ footer{
 }
 
 
-@media screen and (min-width:750px) {
+@media screen and (min-width:47em) {
     body{
         padding: 4rem 2rem 1rem;
     }
