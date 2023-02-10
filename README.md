@@ -46,7 +46,7 @@ Users should be able to:
 
 ### What I learned
 
-I was able to learn more about Object-Oriented Programming in Javascript as well as using AJAX, JSON and Local Storage.
+I was able to learn more about Object-Oriented Programming in Javascript. I've also used AJAX to request data from JSON as well as save to LocalStorage.
 
 ### Continued development
 

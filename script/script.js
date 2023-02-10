@@ -526,9 +526,7 @@ function btnReplyClicked(event){
     //Disable the Reply Button
     event.target.disabled = true
     //Focus TextArea
-    addReplyContainer.addEventListener('animationend', ()=> {
-        formTextArea.focus()
-    })
+    formTextArea.focus()
 }
 
 function btnCancelReplyClicked(event){
