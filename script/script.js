@@ -1,20 +1,8 @@
-
-//Import data from JSON file
-//import data from './data.json' assert { type: 'json' };
-
-//SELECTORS
 const mainSection = document.getElementsByTagName('main')[0]
 let commentsData = {}
 let currentUser = null
 
-
-//FUNCTIONS
-
 getLocalCommentsData()
-//displayComments()
-
-
-//MODEL
 
 function getLocalCommentsData(){
     if(localStorage.getItem('commentsData') === null){
@@ -254,10 +242,6 @@ function addDownvotedComment(commentID){
 }
 
 
-
-//VIEW
-
-
 function displayComments(){
     let comments = commentsData.comments
     comments.forEach(comment => {
@@ -476,10 +460,6 @@ function updateCommentScore(commentID, commentWrapper){
 }
 
 
-
-//CONTROLLER
-
-
 function btnSendCommentClicked(event){
     event.preventDefault()
     //Get the Comment Content
@@ -546,7 +526,9 @@ function btnReplyClicked(event){
     //Disable the Reply Button
     event.target.disabled = true
     //Focus TextArea
-    formTextArea.focus()
+    addReplyContainer.addEventListener('animationend', ()=> {
+        formTextArea.focus()
+    })
 }
 
 function btnCancelReplyClicked(event){

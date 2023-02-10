@@ -346,7 +346,10 @@ footer{
     right: 0;
     left: 0;
     background-color: hsla(212, 13%, 46%, 0.356);
-    padding: 30vh 1rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-delete-comment{

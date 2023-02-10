@@ -40,12 +40,13 @@ Users should be able to:
 - Semantic HTML5 markup
 - CSS Flexbox and Grid
 - Mobile-first workflow
-- Vanilla Javascript with LocalStorage
+- Vanilla Javascript 
+- AJAX, JSON and LocalStorage
 
 
 ### What I learned
 
-I was able to learn more about Object-Oriented Programming in Javascript as well as using JSON and Local Storage.
+I was able to learn more about Object-Oriented Programming in Javascript as well as using AJAX, JSON and Local Storage.
 
 ### Continued development
 
