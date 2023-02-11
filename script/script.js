@@ -276,6 +276,7 @@ function displayComments(){
     const formUserImage = document.createElement('img')
     formUserImage.src = currentUser.image.png
     formUserImage.classList.add('user-image')
+    formUserImage.alt ="User's Profile Photo"
     formAddComment.appendChild(formUserImage)
     //Create Text area and add to form
     const formTextArea = document.createElement('textarea')
@@ -311,6 +312,7 @@ function createComment(comment){
     const userImage = document.createElement('img')
     userImage.src = comment.user.image.png
     userImage.classList.add('user-image')
+    userImage.alt = "User's Profile Photo"
     commentContainer.appendChild(userImage)
     //Create Username and append to Commentcontainer
     const userName = document.createElement('p')
@@ -332,6 +334,7 @@ function createComment(comment){
     scoreSection.classList.add('score-section')
     const btnUpvote = document.createElement('button')
     btnUpvote.classList.add('btn-upvote')
+    btnUpvote.ariaLabel = "Upvote Comment"
     btnUpvote.addEventListener('click', btnUpvoteClicked)
     scoreSection.appendChild(btnUpvote)
     const commentScore = document.createElement('p')
@@ -340,6 +343,7 @@ function createComment(comment){
     scoreSection.appendChild(commentScore)
     const btnDownvote = document.createElement('button')
     btnDownvote.classList.add('btn-downvote')
+    btnDownvote.ariaLabel = "Downvote Comment"
     btnDownvote.addEventListener('click', btnDownvoteClicked)
     scoreSection.appendChild(btnDownvote)
     commentContainer.appendChild(scoreSection)
@@ -492,6 +496,7 @@ function btnReplyClicked(event){
     const formUserImage = document.createElement('img')
     formUserImage.src = currentUser.image.png
     formUserImage.classList.add('user-image')
+    formUserImage.alt = "User's Profile Photo"
     formAddReply.appendChild(formUserImage)
     //Create Text area and add to form
     const formTextArea = document.createElement('textarea')
@@ -512,8 +517,8 @@ function btnReplyClicked(event){
     formAddReply.appendChild(formBtnSend)
     //Create Cancel button and add to form
     const formBtnCancel = document.createElement('button')
-    formBtnCancel.classList.add('btn-cancel-reply')
     formBtnCancel.classList.add('blue-button')
+    formBtnCancel.classList.add('btn-cancel-reply')
     formBtnCancel.innerText = "Cancel"
     formBtnCancel.addEventListener('click', btnCancelReplyClicked)
     formAddReply.appendChild(formBtnCancel)
@@ -565,6 +570,7 @@ function btnEditReplyClicked(event){
     const formUserImage = document.createElement('img')
     formUserImage.src = currentUser.image.png
     formUserImage.classList.add('user-image')
+    formUserImage.alt = "User's Profile Photo"
     formUpdateComment.appendChild(formUserImage)
     //Create Username and add to form
     const formUserName = document.createElement('p')
@@ -583,6 +589,7 @@ function btnEditReplyClicked(event){
     formScoreSection.classList.add('score-section')
     const btnUpvote = document.createElement('button')
     btnUpvote.classList.add('btn-upvote')
+    btnUpvote.ariaLabel = "Upvote comment"
     btnUpvote.disabled = true
     formScoreSection.appendChild(btnUpvote)
     const commentScore = document.createElement('p')
@@ -591,6 +598,7 @@ function btnEditReplyClicked(event){
     formScoreSection.appendChild(commentScore)
     const btnDownvote = document.createElement('button')
     btnDownvote.classList.add('btn-downvote')
+    btnDownvote.ariaLabel = "Downvote Comment"
     btnDownvote.disabled = true
     formScoreSection.appendChild(btnDownvote)
     formUpdateComment.appendChild(formScoreSection)
