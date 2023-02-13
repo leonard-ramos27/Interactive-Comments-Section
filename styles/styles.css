@@ -147,14 +147,9 @@ main{
     background-repeat: no-repeat;
     background-position: center;
     border: none;
-}
-
-.btn-upvote{
-    background-image: url(../images/icon-plus.svg);
-}
-
-.btn-downvote{
-    background-image: url(../images/icon-minus.svg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-reply{
@@ -299,8 +294,8 @@ main{
 .btn-cancel-reply{
     grid-area: btnCancel;
     justify-self: end;
-    background-color: var(--light-grayish-blue);
-    color: var(--moderate-blue);
+    background-color: hsl(239, 61%, 81%);
+    color: white;
 }
 
 .form-update-comment{

@@ -335,6 +335,10 @@ function createComment(comment){
     const btnUpvote = document.createElement('button')
     btnUpvote.classList.add('btn-upvote')
     btnUpvote.ariaLabel = "Upvote Comment"
+    const imgUpvote = document.createElement('img')
+    imgUpvote.src ="../images/icon-plus.svg"
+    imgUpvote.alt = "Upvote Icon"
+    btnUpvote.appendChild(imgUpvote)
     btnUpvote.addEventListener('click', btnUpvoteClicked)
     scoreSection.appendChild(btnUpvote)
     const commentScore = document.createElement('p')
@@ -344,6 +348,10 @@ function createComment(comment){
     const btnDownvote = document.createElement('button')
     btnDownvote.classList.add('btn-downvote')
     btnDownvote.ariaLabel = "Downvote Comment"
+    const imgDownvote = document.createElement('img')
+    imgDownvote.src = "../images/icon-minus.svg"
+    imgDownvote.alt = "Downvote Icon"
+    btnDownvote.appendChild(imgDownvote)
     btnDownvote.addEventListener('click', btnDownvoteClicked)
     scoreSection.appendChild(btnDownvote)
     commentContainer.appendChild(scoreSection)
@@ -591,6 +599,10 @@ function btnEditReplyClicked(event){
     btnUpvote.classList.add('btn-upvote')
     btnUpvote.ariaLabel = "Upvote comment"
     btnUpvote.disabled = true
+    const imgUpvote = document.createElement('img')
+    imgUpvote.src ="../images/icon-plus.svg"
+    imgUpvote.alt = "Upvote Icon"
+    btnUpvote.appendChild(imgUpvote)
     formScoreSection.appendChild(btnUpvote)
     const commentScore = document.createElement('p')
     commentScore.innerText = commentWrapper.querySelector('.score').innerText
@@ -600,6 +612,10 @@ function btnEditReplyClicked(event){
     btnDownvote.classList.add('btn-downvote')
     btnDownvote.ariaLabel = "Downvote Comment"
     btnDownvote.disabled = true
+    const imgDownvote = document.createElement('img')
+    imgDownvote.src = "../images/icon-minus.svg"
+    imgDownvote.alt = "Downvote Icon"
+    btnDownvote.appendChild(imgDownvote)
     formScoreSection.appendChild(btnDownvote)
     formUpdateComment.appendChild(formScoreSection)
     //Create Text area and add to form
