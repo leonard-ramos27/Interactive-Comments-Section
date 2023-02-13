@@ -336,7 +336,7 @@ function createComment(comment){
     btnUpvote.classList.add('btn-upvote')
     btnUpvote.ariaLabel = "Upvote Comment"
     const imgUpvote = document.createElement('img')
-    imgUpvote.src ="../images/icon-plus.svg"
+    imgUpvote.src ="./images/icon-plus.svg"
     imgUpvote.alt = "Upvote Icon"
     btnUpvote.appendChild(imgUpvote)
     btnUpvote.addEventListener('click', btnUpvoteClicked)
@@ -349,7 +349,7 @@ function createComment(comment){
     btnDownvote.classList.add('btn-downvote')
     btnDownvote.ariaLabel = "Downvote Comment"
     const imgDownvote = document.createElement('img')
-    imgDownvote.src = "../images/icon-minus.svg"
+    imgDownvote.src = "./images/icon-minus.svg"
     imgDownvote.alt = "Downvote Icon"
     btnDownvote.appendChild(imgDownvote)
     btnDownvote.addEventListener('click', btnDownvoteClicked)
@@ -600,7 +600,7 @@ function btnEditReplyClicked(event){
     btnUpvote.ariaLabel = "Upvote comment"
     btnUpvote.disabled = true
     const imgUpvote = document.createElement('img')
-    imgUpvote.src ="../images/icon-plus.svg"
+    imgUpvote.src ="./images/icon-plus.svg"
     imgUpvote.alt = "Upvote Icon"
     btnUpvote.appendChild(imgUpvote)
     formScoreSection.appendChild(btnUpvote)
@@ -613,7 +613,7 @@ function btnEditReplyClicked(event){
     btnDownvote.ariaLabel = "Downvote Comment"
     btnDownvote.disabled = true
     const imgDownvote = document.createElement('img')
-    imgDownvote.src = "../images/icon-minus.svg"
+    imgDownvote.src = "./images/icon-minus.svg"
     imgDownvote.alt = "Downvote Icon"
     btnDownvote.appendChild(imgDownvote)
     formScoreSection.appendChild(btnDownvote)
