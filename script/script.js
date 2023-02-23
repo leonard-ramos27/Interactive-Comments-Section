@@ -11,7 +11,6 @@ function getLocalCommentsData(){
         requestData.onload = () => {
             if(requestData.status >= 200 && requestData.status < 400){
                 const receivedData = JSON.parse(requestData.responseText)
-                console.log(receivedData)
                 commentsData = receivedData
                 currentUser = commentsData.currentUser
                 commentsData.votedComments = {
