@@ -328,32 +328,6 @@ function createComment(comment){
     commentContent.innerText = comment.content
     commentContent.classList.add('comment-content')
     commentContainer.appendChild(commentContent)
-    //Create Score section and append to Commentcontainer
-    const scoreSection = document.createElement('div')
-    scoreSection.classList.add('score-section')
-    const btnUpvote = document.createElement('button')
-    btnUpvote.classList.add('btn-upvote')
-    btnUpvote.ariaLabel = "Upvote Comment"
-    const imgUpvote = document.createElement('img')
-    imgUpvote.src ="./images/icon-plus.svg"
-    imgUpvote.alt = "Upvote Icon"
-    btnUpvote.appendChild(imgUpvote)
-    btnUpvote.addEventListener('click', btnUpvoteClicked)
-    scoreSection.appendChild(btnUpvote)
-    const commentScore = document.createElement('p')
-    commentScore.innerText = comment.score
-    commentScore.classList.add('score')
-    scoreSection.appendChild(commentScore)
-    const btnDownvote = document.createElement('button')
-    btnDownvote.classList.add('btn-downvote')
-    btnDownvote.ariaLabel = "Downvote Comment"
-    const imgDownvote = document.createElement('img')
-    imgDownvote.src = "./images/icon-minus.svg"
-    imgDownvote.alt = "Downvote Icon"
-    btnDownvote.appendChild(imgDownvote)
-    btnDownvote.addEventListener('click', btnDownvoteClicked)
-    scoreSection.appendChild(btnDownvote)
-    commentContainer.appendChild(scoreSection)
     //Check if comment is from the current user or from another user
     if(comment.user.username === currentUser.username){
         //Add from-current-user class
@@ -384,6 +358,32 @@ function createComment(comment){
         btnReply.addEventListener('click',btnReplyClicked)
         commentContainer.appendChild(btnReply)
     }
+    //Create Score section and append to Commentcontainer
+    const scoreSection = document.createElement('div')
+    scoreSection.classList.add('score-section')
+    const btnUpvote = document.createElement('button')
+    btnUpvote.classList.add('btn-upvote')
+    btnUpvote.ariaLabel = "Upvote Comment"
+    const imgUpvote = document.createElement('img')
+    imgUpvote.src ="./images/icon-plus.svg"
+    imgUpvote.alt = "Upvote Icon"
+    btnUpvote.appendChild(imgUpvote)
+    btnUpvote.addEventListener('click', btnUpvoteClicked)
+    scoreSection.appendChild(btnUpvote)
+    const commentScore = document.createElement('p')
+    commentScore.innerText = comment.score
+    commentScore.classList.add('score')
+    scoreSection.appendChild(commentScore)
+    const btnDownvote = document.createElement('button')
+    btnDownvote.classList.add('btn-downvote')
+    btnDownvote.ariaLabel = "Downvote Comment"
+    const imgDownvote = document.createElement('img')
+    imgDownvote.src = "./images/icon-minus.svg"
+    imgDownvote.alt = "Downvote Icon"
+    btnDownvote.appendChild(imgDownvote)
+    btnDownvote.addEventListener('click', btnDownvoteClicked)
+    scoreSection.appendChild(btnDownvote)
+    commentContainer.appendChild(scoreSection)
     commentWrapper.appendChild(commentContainer)
     return commentWrapper
 }
